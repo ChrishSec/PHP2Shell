@@ -1,0 +1,35 @@
+services:
+  lab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m,mode=1777
+      - /srv/lab/uploads:rw,nosuid,nodev,noexec,size=16m,uid=33,gid=33,mode=0700
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 128m
+    cpus: 0.5
+    init: true
+    networks:
+      - lab_bridge
+    healthcheck:
+      test:
+        - CMD
+        - php
+        - -r
+        - "exit(in_array('X-PHP2Shell-Lab: PHP2SHELL_UPLOAD_LAB_V1', get_headers('http://127.0.0.1:8080/upload.php') ?: [], true) ? 0 : 1);"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+networks:
+  lab_bridge:
+    driver: bridge
