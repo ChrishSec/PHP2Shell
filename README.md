@@ -24,24 +24,70 @@ Follow links and check other pages:
 python3 scanner.py -l subdomains.txt --crawl
 ```
 
-Check a specific path, such as a login page:
+Check a specific path:
 
 ```bash
 python3 scanner.py -l subdomains.txt --path /admin
 ```
 
+## Exploit Setup
+
+Docker is used to run the vulnerable PHP server. The exploit script runs separately using Python.
+
+Start the server:
+
+```bash
+docker compose up -d --build
+```
+
+The upload page will be available at:
+
+`http://127.0.0.1:8080/upload.php`
+
+Run the exploit:
+
+```bash
+python3 exploit.py --command "id"
+```
+
+For interactive mode:
+
+```bash
+python3 exploit.py --interactive
+```
+
+You can also specify the target URL:
+
+```bash
+python3 exploit.py http://127.0.0.1:8080 --command "whoami"
+```
+
+Type `exit` or `quit` to close the interactive session.
+
+To stop the server:
+
+```bash
+docker compose down
+```
+
+**Note:** The Docker server is for local upload testing and is separate from the CVE scanner. Keep it on localhost and don't expose it publicly.
+
 ## Disclaimer
 
-This tool is intended for educational and research purposes only. Use it at your own risk. The author is not responsible for any damage caused by the use or misuse of this tool.
+This tool is intended for educational and security research purposes only. Use it only on systems you own or have permission to test.
 
-Only scan websites you own or have permission to test.
+The author is not responsible for any misuse or damage caused by this tool.
 
 ## License
 
-This tool is released under the **GNU General Public License v3.0**. Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+This project is licensed under the **GNU General Public License v3.0**.
 
 See the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html) for details.
 
 ## Author
 
-This tool was developed by [ChrishSec](https://github.com/ChrishSec). Feel free to fork, modify, and distribute it. If you have any questions or suggestions, please reach out to the author on [Telegram](https://t.me/ChrishSec).
+Developed by [ChrishSec](https://github.com/ChrishSec).
+
+Feel free to fork, modify, or contribute.
+
+Contact: [Telegram](https://t.me/ChrishSec)
